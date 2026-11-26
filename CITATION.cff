@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this code or the diagnostic protocol, please cite the thesis below."
+title: "PINN_NLS_Hirota: Physics-Informed Neural Networks for soliton-type solutions of the NLS and Hirota equations"
+authors:
+  - family-names: "Contreras Roque"
+    given-names: "Aaron Ernesto"
+    email: "aron.contreras@atmosfera.unam.mx"
+    affiliation: "Instituto de Ciencias de la Atmósfera y Cambio Climático, UNAM"
+repository-code: "https://github.com/aarn96/PINN_NLS_Hirota"
+license: CC-BY-NC-4.0
+preferred-citation:
+  type: thesis
+  title: "Aplicación de redes neuronales informadas por la física a ecuaciones no lineales dispersivas relevantes en ciencias de la atmósfera y el océano"
+  authors:
+    - family-names: "Contreras Roque"
+      given-names: "Aaron Ernesto"
+  thesis-type: "M.Sc. thesis in Earth Sciences (Atmospheric Sciences)"
+  institution:
+    name: "Universidad Nacional Autónoma de México"
+  year: 2026
+  url: "https://hdl.handle.net/20.500.14330/TES01000894006"
+  languages:
+    - spa
+  pages: "274"

@@ -1,0 +1,30 @@
+# PINN_NLS_Hirota — pip dependencies
+#
+# Target Python: 3.10+.
+# Reference environment (Google Colab):
+#   torch 2.11.0+cu130  numpy 2.1.3  python 3.13  (Tesla T4 / CUDA 13.0)
+# Version ranges below are permissive to keep the notebooks runnable on
+# fresh Colab images; pin tighter if you need bit-exact reproducibility.
+
+# --- Core numerics ------------------------------------------------------------
+numpy>=1.24
+scipy>=1.11            # scipy.stats.qmc (LHS, Sobol) requires >=1.7
+matplotlib>=3.7
+
+# --- Deep learning ------------------------------------------------------------
+# Install the CUDA build appropriate to your platform. For CPU-only:
+#     pip install torch --index-url https://download.pytorch.org/whl/cpu
+# For CUDA 12.x (Colab T4):
+#     pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch>=2.1
+
+# --- I/O ----------------------------------------------------------------------
+h5py>=3.9              # some .mat files are v7.3 (HDF5)
+
+# --- Notebooks ----------------------------------------------------------------
+jupyter>=1.0
+ipykernel>=6.25
+
+# --- Optional: statistical analysis in Posprocesamiento notebook --------------
+pandas>=2.0
+tqdm>=4.65

@@ -1,0 +1,24 @@
+# PINN_NLS_Hirota — conda environment (CPU default; swap pytorch-cuda for GPU).
+# Reference environment: Python 3.13, torch 2.11.0+cu130, numpy 2.1.3, Tesla T4.
+
+name: pinn-nls-hirota
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip
+  - numpy>=1.24
+  - scipy>=1.11
+  - matplotlib>=3.7
+  - h5py>=3.9
+  - pandas>=2.0
+  - tqdm
+  - jupyter
+  - ipykernel
+  - pytorch>=2.1
+  # Uncomment the next two lines for a CUDA build (and remove the CPU wheel line):
+  # - pytorch-cuda=12.1
+  # - torchvision
+  - pip:
+      - -r requirements.txt

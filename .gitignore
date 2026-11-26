@@ -1,0 +1,49 @@
+# --- Python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Jupyter -----------------------------------------------------------------
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# --- OS / editor -------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# --- Experiment artefacts ----------------------------------------------------
+# Heavy binary outputs live in Drive; keep the repo light.
+results/**/*.npz
+results/**/*.pt
+results/**/*.pth
+outputs/
+# Track per-run metadata (small JSON) so experiments remain reproducible on disk:
+!results/**/*.json
+
+# --- Reference data ---------------------------------------------------------
+# The author-generated .mat files under data/ ARE committed (see data/README.md).
+# The three files that require permission (NLS_2soliton_interaction.mat,
+# hirota_N_2.mat, N_2_hirota_inter.mat) are excluded explicitly so they are
+# never committed by accident even when present locally.
+data/NLS_2soliton_interaction.mat
+data/hirota_N_2.mat
+data/N_2_hirota_inter.mat
+
+# --- Thesis build (if ever added) -------------------------------------------
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
