@@ -19,6 +19,13 @@
 
 import numpy as np
 
+# np.trapz was removed in NumPy 2.0 in favour of np.trapezoid. Pick whichever
+# exists WITHOUT evaluating the missing name (getattr(..., default) would).
+if hasattr(np, "trapezoid"):
+    _trapezoid = np.trapezoid
+else:  # NumPy < 2.0
+    _trapezoid = np.trapz
+
 
 def compute_norm(U, V, x_vals):
     """
@@ -41,8 +48,6 @@ def compute_norm(U, V, x_vals):
     -------
     N : (Nt,)  value of the conserved quantity at each t
     """
-    # NumPy >= 2.0 removes np.trapz; keep a fallback for older versions.
-    _trapezoid = getattr(np, "trapezoid", np.trapz)
     return _trapezoid(U**2 + V**2, x=x_vals, axis=1)
 
 

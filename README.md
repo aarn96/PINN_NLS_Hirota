@@ -115,7 +115,7 @@ PINN_NLS_Hirota/
 │   └── spearman.py                        ← ρ₁–ρ₄ with NaN/Inf-safe wrappers
 │
 ├── notebooks/
-│   ├── PINN_Torch_NLS_Hirota.ipynb        ← unified training notebook (PyTorch + Colab GPU)
+│   ├── PINN_Torch_NLS_Hirota.ipynb        ← training notebook (PyTorch + Colab GPU)
 │   └── Postprocessing_PINN_NLS_Hirota.ipynb  ← postprocessing, diagnostics, figures
 │
 ├── data/                                  ← reference solutions (see §7)
@@ -152,7 +152,7 @@ conda activate pinn-nls-hirota
 
 ### 5.3 Google Colab
 
-The notebooks were developed on Google Colab with a Tesla T4 GPU. Open a notebook from GitHub and run the first cell; it mounts Drive, installs any missing dependency, and sets `sys.path` to reach `src/`.
+The notebooks were developed on Google Colab with a Tesla T4 GPU. Copy or clone the repository into Google Drive (default location: `MyDrive/PINN_NLS_Hirota`; otherwise edit `REPO_PATH` in the setup cell), then open the notebook from Drive. The setup cell mounts Drive and adds `src/` to `sys.path`; PyTorch, NumPy, SciPy and Matplotlib are preinstalled on Colab, and the postprocessing notebook installs `cmocean` if needed.
 
 **Reference environment:** Tesla T4, `torch 2.11.0+cu130`, `numpy 2.1.3`, Python 3.13.
 
@@ -162,20 +162,34 @@ The notebooks were developed on Google Colab with a Tesla T4 GPU. Open a noteboo
 
 ### 6.1 Training a configuration
 
-Open `notebooks/PINN_Torch_NLS_Hirota.ipynb` and set:
+**Quick start.** `notebooks/PINN_Torch_NLS_Hirota.ipynb` runs as is with the data shipped in `data/`. Its default case is the Hirota $N=1$ fundamental soliton (Zhou & Yan, 2021; `Bright_soliton.mat`) on $x\in[-10,10]$, $t\in[0,5]$, with the Hirota baseline below and one run per sampling strategy (LHS, Sobol, Grid, Random). Then run `notebooks/Postprocessing_PINN_NLS_Hirota.ipynb` with the same configuration cell to obtain the figures and tables of that batch. On a CPU the full budget is slow; reduce `n_adam` and `n_lbfgs` for a quick check.
 
-- `equation`: `"NLS"` or `"Hirota"` (Zhou & Yan or Serkin parametrization)
-- `case`: `N1`, `N2_bound`, or `N2_collision`
-- `architecture`: `[L, n]` (hidden layers × neurons), e.g. `[4, 80]`
-- `sampling`: one of `LHS`, `Grid`, `Random`, `Sobol`
+Both notebooks start with the same configuration cell:
+
+- `equation` and `case` select the residual, the reference `.mat` file and the domain (Table 3.2 of the thesis):
+
+  | `equation` | `case`        | Reference file                 | $x$          | $t$           | Availability |
+  |------------|---------------|--------------------------------|--------------|---------------|--------------|
+  | `'yan'`    | `fundamental` | `Bright_soliton.mat`           | $[-10, 10]$  | $[0, 5]$      | Included (default) |
+  | `'nls'`    | `fundamental` | `NLS_N1.mat`                   | $[-5, 5]$    | $[0, \pi/2]$  | Included |
+  | `'nls'`    | `bound_state` | `NLS_N2.mat`                   | $[-5, 5]$    | $[0, \pi/2]$  | Included |
+  | `'nls'`    | `collision`   | `NLS_2soliton_interaction.mat` | $[0, 20]$    | $[0, 5]$      | On request |
+  | `'hirota'` | `bound_state` | `hirota_N_2.mat`               | $[-5, 5]$    | $[0, 2\pi]$   | On request |
+  | `'hirota'` | `collision`   | `N_2_hirota_inter.mat`         | $[-10, 10]$  | $[0, 4]$      | On request |
+
+  `'yan'` is the Hirota equation in the Zhou & Yan parametrization and `'hirota'` the Serkin parametrization (§2). The central result of §3.1 uses the `'hirota'` / `bound_state` case; its reference file is available on request (§7, `data/README.md`). If a selected file is missing, the notebook stops with a message that points to the request procedure.
+- `architecture`: `[2, n, ..., n, 2]` (input, hidden layers, output), e.g. `[2, 80, 80, 80, 80, 2]` for $[4\times 80]$
+- `sampling_strategies`: any subset of `LHS`, `Sobol`, `Grid`, `Random` (one experiment each)
 - `bc_mode`: integer code for the boundary-condition variant:
     - `0`, `1` → **no BC** (unpenalized boundaries)
     - `2` → **Val Only** (periodic in $\psi$)
     - `3` → **Der1 Only** (periodic in $\partial_x\psi$)
     - `4` → **Val + Der1**
     - `5` → **Val + Der1 + Der2** (adds periodicity in $\partial^2_x\psi$)
-- `optimizer`: Adam + L-BFGS (budget depends on the phase; see table below)
-- `seed`: default $1234$; any 6-digit integer
+- `n_adam`, `n_lbfgs`, `lr`: Adam epochs, maximum L-BFGS iterations and Adam learning rate (see §6.2)
+- `seed`: default $1234$
+
+Outputs go to `outputs/<BATCH_ID>/` (training) and `results/<BATCH_ID>/` (postprocessing), where `BATCH_ID` is built from the case, architecture and BC mode (e.g. `Yan_N1_4x80_NoBC_Sampling`).
 
 ### 6.2 Baseline configurations
 
